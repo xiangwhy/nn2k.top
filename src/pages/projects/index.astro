@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
 
 const all = await getCollection('projects', ({ data }) => !data.draft);
 const sorted = all.sort(
@@ -19,8 +19,8 @@ const sorted = all.sort(
       <p class="eyebrow">全部 · {sorted.length} 个项目</p>
       <h1 class="list-title">项目</h1>
     </header>
-    <div class="grid">
-      {sorted.map((p) => <ProjectCard project={p} />)}
+    <div class="list" role="list">
+      {sorted.map((p) => <ProjectRow project={p} />)}
     </div>
   </section>
 </Base>
@@ -31,7 +31,7 @@ const sorted = all.sort(
   }
 
   .list-head {
-    margin-bottom: var(--s-12);
+    margin-bottom: var(--s-8);
   }
 
   .eyebrow {
@@ -47,9 +47,8 @@ const sorted = all.sort(
     font-size: clamp(var(--t-3xl), 6vw, var(--t-4xl));
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-    gap: var(--s-4);
+  /* list sits flush inside its own hairline band; rows draw their own top borders */
+  .list {
+    margin-top: var(--s-6);
   }
 </style>

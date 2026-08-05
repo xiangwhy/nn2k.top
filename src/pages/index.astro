@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Seal from '../components/Seal.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import ProjectRow from '../components/ProjectRow.astro';
 
 const all = await getCollection('projects', ({ data }) => !data.draft);
 const sorted = all.sort(
@@ -31,7 +32,7 @@ const rest = sorted.filter((p) => !p.data.featured);
       </p>
     </div>
     <div class="hero-seal">
-      <Seal size={120} />
+      <Seal size={96} />
     </div>
   </section>
 
@@ -40,6 +41,7 @@ const rest = sorted.filter((p) => !p.data.featured);
       <section class="container section">
         <header class="section-head">
           <h2 class="section-title">重点项目</h2>
+          <span class="section-dots" aria-hidden="true">· · ·</span>
           <span class="section-rule" aria-hidden="true" />
         </header>
         <div class="grid grid--featured">
@@ -56,11 +58,12 @@ const rest = sorted.filter((p) => !p.data.featured);
       <section class="container section">
         <header class="section-head">
           <h2 class="section-title">其他</h2>
+          <span class="section-dots" aria-hidden="true">· · ·</span>
           <span class="section-rule" aria-hidden="true" />
         </header>
-        <div class="grid">
+        <div class="list" role="list">
           {rest.map((p) => (
-            <ProjectCard project={p} />
+            <ProjectRow project={p} />
           ))}
         </div>
       </section>
@@ -71,14 +74,17 @@ const rest = sorted.filter((p) => !p.data.featured);
 <style>
   .hero {
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: var(--s-8);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: var(--s-8);
     padding-block: var(--s-16) var(--s-12);
   }
 
   .hero-text {
     max-width: 32rem;
+    /* fade-in-up entrance for the headline area */
+    animation: hero-enter 0.6s ease-out both;
+    animation-delay: 0.05s;
   }
 
   .eyebrow {
@@ -122,14 +128,25 @@ const rest = sorted.filter((p) => !p.data.featured);
     margin-inline: var(--s-2);
   }
 
+  .hero-seal {
+    justify-self: end;
+    align-self: start;
+    margin-top: var(--s-2);
+    /* stamp-press micro animation. fill-mode backwards keeps the 0%
+     * (invisible, oversized) state during the delay; ending at transform:none
+     * lets .seal's own rotate(-4deg) stand alone — no double rotation. */
+    animation: seal-stamp 0.45s cubic-bezier(0.2, 0.7, 0.3, 1.2) backwards;
+    animation-delay: 0.15s;
+  }
+
   .section {
     padding-block: var(--s-8);
   }
 
   .section-head {
     display: flex;
-    align-items: center;
-    gap: var(--s-4);
+    align-items: baseline;
+    gap: var(--s-3);
     margin-bottom: var(--s-6);
   }
 
@@ -141,10 +158,20 @@ const rest = sorted.filter((p) => !p.data.featured);
     color: var(--c-muted);
   }
 
+  .section-dots {
+    font-family: var(--ff-mono);
+    font-size: var(--t-base);
+    color: var(--c-rule);
+    letter-spacing: 0.2em;
+    flex-shrink: 0;
+  }
+
   .section-rule {
     flex: 1;
-    height: 1px;
-    background: var(--c-rule);
+    align-self: center;
+    height: 0;
+    border-top: 1px dotted var(--c-rule);
+    margin: 0;
   }
 
   .grid {
@@ -157,18 +184,52 @@ const rest = sorted.filter((p) => !p.data.featured);
     grid-template-columns: 1fr;
   }
 
-  .hero-seal {
-    justify-self: end;
-    align-self: end;
+  .list {
+    margin-top: var(--s-2);
+  }
+
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes seal-stamp {
+    0% {
+      opacity: 0;
+      transform: rotate(-15deg) scale(1.4);
+    }
+    60% {
+      opacity: 1;
+      transform: rotate(-3deg) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (max-width: 600px) {
     .hero {
       grid-template-columns: 1fr;
+      row-gap: var(--s-8);
       padding-block: var(--s-12) var(--s-8);
     }
     .hero-seal {
       justify-self: start;
+      order: -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-text,
+    .hero-seal {
+      animation: none;
     }
   }
 </style>
