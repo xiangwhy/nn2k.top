@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="关于"
+  description="关于这个站。"
+>
+  <article class="container prose about">
+    <p class="eyebrow">关于</p>
+    <h1>关于</h1>
+
+    <p>
+      这是关于页面。等你想好怎么介绍自己再写。
+      建议覆盖三件事：
+    </p>
+
+    <ul>
+      <li>现在在做什么（一句话就够）</li>
+      <li>在意什么样的工作 / 什么样的合作</li>
+      <li>怎么联系你（邮箱、GitHub、Twitter…）</li>
+    </ul>
+
+    <hr />
+
+    <p class="muted">
+      站点用 <a href="https://astro.build" rel="noopener noreferrer">Astro</a>
+      构建，部署在 <a href="https://pages.cloudflare.com" rel="noopener noreferrer"
+        >Cloudflare Pages</a
+      >。源码会在你想公开时放到 GitHub。
+    </p>
+  </article>
+</Base>
+
+<style>
+  .about {
+    padding-block: var(--s-12) var(--s-16);
+  }
+
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-muted);
+    margin-bottom: var(--s-3);
+  }
+
+  .about h1 {
+    font-size: clamp(var(--t-3xl), 6vw, var(--t-4xl));
+    margin-bottom: var(--s-8);
+  }
+
+  .muted {
+    color: var(--c-muted);
+    font-size: var(--t-sm);
+  }
+</style>

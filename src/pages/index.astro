@@ -1,0 +1,174 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Seal from '../components/Seal.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const all = await getCollection('projects', ({ data }) => !data.draft);
+const sorted = all.sort(
+  (a, b) =>
+    b.data.order - a.data.order || b.data.year - a.data.year,
+);
+const featured = sorted.filter((p) => p.data.featured);
+const rest = sorted.filter((p) => !p.data.featured);
+---
+
+<Base title="nn2k.top">
+  <section class="hero container">
+    <div class="hero-text">
+      <p class="eyebrow">作品集 · {new Date().getFullYear()}</p>
+      <h1 class="hero-name">
+        做过的一些<span class="hero-em">东西</span>，
+        写过的几行<span class="hero-em">字</span>。
+      </h1>
+      <p class="hero-bio">
+        这里是我的个人站。等想好怎么介绍自己再补一段不那么尴尬的简介。
+      </p>
+      <p class="hero-links">
+        <a href="/projects/">查看全部项目 →</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="/about/">关于</a>
+      </p>
+    </div>
+    <div class="hero-seal">
+      <Seal size={120} />
+    </div>
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section class="container section">
+        <header class="section-head">
+          <h2 class="section-title">重点项目</h2>
+          <span class="section-rule" aria-hidden="true" />
+        </header>
+        <div class="grid grid--featured">
+          {featured.map((p) => (
+            <ProjectCard project={p} featured />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    rest.length > 0 && (
+      <section class="container section">
+        <header class="section-head">
+          <h2 class="section-title">其他</h2>
+          <span class="section-rule" aria-hidden="true" />
+        </header>
+        <div class="grid">
+          {rest.map((p) => (
+            <ProjectCard project={p} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--s-8);
+    padding-block: var(--s-16) var(--s-12);
+  }
+
+  .hero-text {
+    max-width: 32rem;
+  }
+
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-muted);
+    margin-bottom: var(--s-4);
+  }
+
+  .hero-name {
+    font-size: clamp(var(--t-2xl), 5vw, var(--t-4xl));
+    line-height: 1.15;
+    margin-bottom: var(--s-6);
+  }
+
+  .hero-em {
+    color: var(--c-seal);
+  }
+
+  .hero-bio {
+    color: var(--c-muted);
+    font-size: var(--t-lg);
+    line-height: 1.6;
+    margin-bottom: var(--s-6);
+  }
+
+  .hero-links {
+    font-size: var(--t-sm);
+    color: var(--c-muted);
+  }
+
+  .hero-links a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+  }
+
+  .dot {
+    margin-inline: var(--s-2);
+  }
+
+  .section {
+    padding-block: var(--s-8);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    margin-bottom: var(--s-6);
+  }
+
+  .section-title {
+    font-family: var(--ff-display);
+    font-size: var(--t-xl);
+    font-weight: 500;
+    margin: 0;
+    color: var(--c-muted);
+  }
+
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--c-rule);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--s-4);
+  }
+
+  .grid--featured {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-seal {
+    justify-self: end;
+    align-self: end;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding-block: var(--s-12) var(--s-8);
+    }
+    .hero-seal {
+      justify-self: start;
+    }
+  }
+</style>

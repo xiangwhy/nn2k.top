@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const all = await getCollection('projects', ({ data }) => !data.draft);
+const sorted = all.sort(
+  (a, b) =>
+    b.data.order - a.data.order || b.data.year - a.data.year,
+);
+---
+
+<Base
+  title="项目"
+  description="做过的所有东西。"
+>
+  <section class="container list-page">
+    <header class="list-head">
+      <p class="eyebrow">全部 · {sorted.length} 个项目</p>
+      <h1 class="list-title">项目</h1>
+    </header>
+    <div class="grid">
+      {sorted.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list-page {
+    padding-block: var(--s-12);
+  }
+
+  .list-head {
+    margin-bottom: var(--s-12);
+  }
+
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-muted);
+    margin-bottom: var(--s-3);
+  }
+
+  .list-title {
+    font-size: clamp(var(--t-3xl), 6vw, var(--t-4xl));
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: var(--s-4);
+  }
+</style>

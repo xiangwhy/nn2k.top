@@ -1,0 +1,202 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+
+export const getStaticPaths = (async () => {
+  const all = await getCollection('projects', ({ data }) => !data.draft);
+  return all.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { data } = project;
+---
+
+<Base title={data.title} description={data.summary}>
+  <article class="container project">
+    <header class="project-head">
+      <p class="eyebrow">
+        <span>{data.year}</span>
+        {
+          data.tags.length > 0 && (
+            <>
+              <span class="sep">·</span>
+              <span class="tags">
+                {data.tags.map((t) => (
+                  <span class="tag">{t}</span>
+                ))}
+              </span>
+            </>
+          )
+        }
+      </p>
+      <h1 class="project-title">{data.title}</h1>
+      <p class="project-summary">{data.summary}</p>
+      {
+        (data.link || data.repo) && (
+          <p class="project-links">
+            {data.link && (
+              <a href={data.link} target="_blank" rel="noopener noreferrer">
+                访问 ↗
+              </a>
+            )}
+            {data.link && data.repo && <span class="sep">·</span>}
+            {data.repo && (
+              <a href={data.repo} target="_blank" rel="noopener noreferrer">
+                源码 ↗
+              </a>
+            )}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="prose project-body">
+      <Content />
+    </div>
+
+    <footer class="project-foot">
+      <a href="/projects/">← 返回项目列表</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .project {
+    padding-block: var(--s-12) var(--s-16);
+    max-width: var(--w-prose);
+  }
+
+  .project-head {
+    margin-bottom: var(--s-12);
+  }
+
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-muted);
+    margin-bottom: var(--s-4);
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+  }
+
+  .tags {
+    display: inline-flex;
+    gap: var(--s-2);
+  }
+
+  .tag {
+    display: inline-block;
+  }
+
+  .sep {
+    color: var(--c-rule);
+  }
+
+  .project-title {
+    font-size: clamp(var(--t-2xl), 5vw, var(--t-4xl));
+    margin-bottom: var(--s-4);
+  }
+
+  .project-summary {
+    color: var(--c-muted);
+    font-size: var(--t-lg);
+    line-height: 1.6;
+    margin-bottom: var(--s-4);
+  }
+
+  .project-links {
+    font-size: var(--t-sm);
+  }
+
+  .project-links a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+  }
+
+  .project-body {
+    /* prose styles for rendered markdown */
+  }
+
+  .project-body :global(h2) {
+    font-size: var(--t-xl);
+    margin-top: var(--s-12);
+    margin-bottom: var(--s-4);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--c-rule);
+  }
+
+  .project-body :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .project-body :global(h3) {
+    font-size: var(--t-lg);
+    margin-top: var(--s-8);
+    margin-bottom: var(--s-3);
+  }
+
+  .project-body :global(p),
+  .project-body :global(ul),
+  .project-body :global(ol),
+  .project-body :global(blockquote) {
+    color: var(--c-ink);
+    line-height: 1.75;
+  }
+
+  .project-body :global(ul),
+  .project-body :global(ol) {
+    padding-left: var(--s-6);
+  }
+
+  .project-body :global(li) {
+    margin-bottom: var(--s-2);
+  }
+
+  .project-body :global(blockquote) {
+    border-left: 2px solid var(--c-seal);
+    padding-left: var(--s-4);
+    color: var(--c-muted);
+    font-style: italic;
+    margin-block: var(--s-4);
+  }
+
+  .project-body :global(hr) {
+    margin-block: var(--s-8);
+  }
+
+  .project-body :global(a) {
+    color: var(--c-ink);
+    text-decoration-color: var(--c-seal);
+  }
+
+  .project-foot {
+    margin-top: var(--s-12);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--c-rule);
+    font-size: var(--t-sm);
+  }
+
+  .project-foot a {
+    text-decoration: none;
+    color: var(--c-muted);
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+  }
+
+  .project-foot a:hover {
+    color: var(--c-seal);
+    border-bottom-color: var(--c-seal);
+  }
+</style>

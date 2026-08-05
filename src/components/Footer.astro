@@ -1,0 +1,33 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="copy">© {year} nn2k.top</span>
+    <span class="rule" aria-hidden="true">— 完 —</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--c-rule);
+    padding-block: var(--s-6);
+    margin-top: var(--s-16);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    font-size: var(--t-xs);
+    color: var(--c-muted);
+    font-family: var(--ff-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .copy {
+    text-transform: uppercase;
+  }
+</style>

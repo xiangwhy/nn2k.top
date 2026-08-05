@@ -1,0 +1,60 @@
+---
+/**
+ * Seal — the site's signature mark. A single 朱砂 (cinnabar) square with a
+ * character inside, used sparingly on the home page only. Slight rotation
+ * gives it the "freshly stamped" feel of a real 印章.
+ *
+ * Swap the inner character for your own seal mark when ready.
+ */
+interface Props {
+  /** The character rendered inside the seal. Defaults to 翔. */
+  char?: string;
+  /** Pixel size. */
+  size?: number;
+}
+
+const { char = '翔', size = 96 } = Astro.props;
+---
+
+<span
+  class="seal"
+  role="img"
+  aria-label={`印章 · ${char}`}
+  style={`--seal-size: ${size}px`}
+>
+  <span class="seal-char">{char}</span>
+</span>
+
+<style>
+  .seal {
+    display: inline-grid;
+    place-items: center;
+    width: var(--seal-size, 96px);
+    height: var(--seal-size, 96px);
+    background: var(--c-seal);
+    color: var(--c-paper);
+    transform: rotate(-4deg);
+    box-shadow:
+      inset 0 0 0 2px rgba(241, 238, 231, 0.15),
+      0 1px 0 rgba(26, 24, 20, 0.08);
+    position: relative;
+  }
+
+  /* Hand-pressed distress: slightly irregular outer edge via two layered shadows. */
+  .seal::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 1px solid rgba(181, 48, 42, 0.35);
+    pointer-events: none;
+  }
+
+  .seal-char {
+    font-family: var(--ff-display);
+    font-weight: 500;
+    font-size: calc(var(--seal-size, 96px) * 0.55);
+    line-height: 1;
+    /* optical centering for the single glyph */
+    padding-bottom: 6%;
+  }
+</style>

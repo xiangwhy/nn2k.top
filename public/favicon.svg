@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="4" fill="#B5302A" transform="rotate(-4 64 64)"/>
+  <text
+    x="64"
+    y="64"
+    fill="#F1EEE7"
+    font-family="'Songti SC','Source Han Serif SC','IBM Plex Serif',serif"
+    font-size="74"
+    font-weight="500"
+    text-anchor="middle"
+    dominant-baseline="central">翔</text>
+</svg>

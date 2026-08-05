@@ -1,0 +1,113 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  /** When true, render a larger card for the home hero */
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const { data } = project;
+---
+
+<a
+  href={`/projects/${project.id}/`}
+  class:list={['card', { 'card--featured': featured }]}
+  data-featured={featured ? 'true' : undefined}
+>
+  <div class="meta">
+    <span class="year">{data.year}</span>
+    {
+      data.tags.length > 0 && (
+        <span class="tags">
+          {data.tags.slice(0, 3).map((t) => (
+            <span class="tag">{t}</span>
+          ))}
+        </span>
+      )
+    }
+  </div>
+  <h3 class="title">{data.title}</h3>
+  <p class="summary">{data.summary}</p>
+  <span class="arrow" aria-hidden="true">→</span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-6);
+    background: var(--c-card);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--c-ink);
+    position: relative;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--c-rule);
+    transform: translateY(-2px);
+    color: var(--c-ink);
+  }
+
+  .card:hover .arrow {
+    color: var(--c-seal);
+    transform: translateX(2px);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tags {
+    display: inline-flex;
+    gap: var(--s-2);
+  }
+
+  .tag {
+    display: inline-block;
+  }
+
+  .title {
+    font-size: var(--t-xl);
+    margin: 0;
+  }
+
+  .card--featured .title {
+    font-size: var(--t-2xl);
+  }
+
+  .summary {
+    margin: 0;
+    color: var(--c-muted);
+    font-size: var(--t-base);
+    line-height: 1.55;
+  }
+
+  .arrow {
+    position: absolute;
+    top: var(--s-6);
+    right: var(--s-6);
+    color: var(--c-muted);
+    transition: color 0.2s ease, transform 0.2s ease;
+    font-size: var(--t-base);
+  }
+
+  @media (max-width: 600px) {
+    .arrow {
+      position: static;
+      align-self: flex-end;
+    }
+  }
+</style>
