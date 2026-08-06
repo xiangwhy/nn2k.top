@@ -5,6 +5,11 @@ year: 2026
 tags: ["RouterOS", "Bash", "GitHub Actions", "Networking"]
 repo: "https://github.com/xiangwhy/chnroute"
 featured: false
+downloads:
+  - label: "CN.rsc"
+    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/main/CN.rsc"
+  - label: "LAN.rsc"
+    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/main/LAN.rsc"
 order: 80
 ---
 

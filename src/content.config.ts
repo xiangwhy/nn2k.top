@@ -12,6 +12,14 @@ const projects = defineCollection({
     repo: z.string().url().optional(),
     cover: z.string().optional(),
     featured: z.boolean().default(false),
+    downloads: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string().url(),
+        }),
+      )
+      .optional(),
     draft: z.boolean().default(false),
     order: z.number().int().default(0),
   }),
