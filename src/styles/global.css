@@ -161,6 +161,57 @@ hr {
 }
 
 /* ---------------------------------------------------------------------------
+ * Skip link (a11y)
+ * ------------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 100;
+  padding: var(--s-3) var(--s-4);
+  background: var(--c-seal);
+  color: var(--c-paper);
+  font-family: var(--ff-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border-bottom: 0;
+  transition: top 0.2s ease;
+}
+
+.skip-link:hover {
+  color: var(--c-paper);
+  text-decoration: none;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 2px solid var(--c-paper);
+  outline-offset: -2px;
+  color: var(--c-paper);
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Scroll-in reveal
+ * Matches the hero-enter language: translateY(8px) + opacity 0 → 1,
+ * 0.6s ease-out. JS adds `.is-revealed` on first intersection, then
+ * unobserves. The <noscript> fallback in Base.astro forces visibility
+ * when JS is off; the reduced-motion block below does the same.
+ * ------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------------
  * Reduced motion
  * ------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
@@ -169,5 +220,12 @@ hr {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+
+  [data-reveal],
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

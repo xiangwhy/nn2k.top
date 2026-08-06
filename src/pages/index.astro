@@ -23,7 +23,7 @@ const rest = sorted.filter((p) => !p.data.featured);
         写过的几行<span class="hero-em">字</span>。
       </h1>
       <p class="hero-bio">
-        这里是我的个人站。等想好怎么介绍自己再补一段不那么尴尬的简介。
+        自从有了 AI，把很多以前没办法实现的想法慢慢做出来了 — 这个站是把其中几个攒起来的地方。
       </p>
       <p class="hero-links">
         <a href="/projects/">查看全部项目 →</a>
@@ -38,7 +38,7 @@ const rest = sorted.filter((p) => !p.data.featured);
 
   {
     featured.length > 0 && (
-      <section class="container section">
+      <section class="container section" data-reveal>
         <header class="section-head">
           <h2 class="section-title">重点项目</h2>
           <span class="section-dots" aria-hidden="true">· · ·</span>
@@ -55,7 +55,7 @@ const rest = sorted.filter((p) => !p.data.featured);
 
   {
     rest.length > 0 && (
-      <section class="container section">
+      <section class="container section" data-reveal>
         <header class="section-head">
           <h2 class="section-title">其他</h2>
           <span class="section-dots" aria-hidden="true">· · ·</span>

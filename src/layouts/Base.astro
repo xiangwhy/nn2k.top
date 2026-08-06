@@ -6,13 +6,19 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
 const {
   title,
   description = '个人作品集 — 一些做过的东西、写过的字。',
+  ogImage = '/og-image.svg',
 } = Astro.props;
+
 const fullTitle = title === 'nn2k.top' ? title : `${title} · nn2k.top`;
+const SITE_URL = 'https://nn2k.top';
+const canonical = new URL(Astro.url.pathname, SITE_URL).toString();
+const ogUrl = new URL(ogImage, SITE_URL).toString();
 ---
 
 <!doctype html>
@@ -22,20 +28,75 @@ const fullTitle = title === 'nn2k.top' ? title : `${title} · nn2k.top`;
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#b5302a" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="nn2k.top" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
     />
+
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">跳到主要内容</a>
     <Header />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />
+
+    <noscript>
+      <style>
+        [data-reveal] { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+
+    <script is:inline>
+      (function () {
+        var targets = document.querySelectorAll('[data-reveal]');
+        if (!targets.length) return;
+
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || !('IntersectionObserver' in window)) {
+          targets.forEach(function (el) { el.classList.add('is-revealed'); });
+          return;
+        }
+
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+        );
+        targets.forEach(function (el) { io.observe(el); });
+      })();
+    </script>
   </body>
 </html>

@@ -18,7 +18,10 @@ const { data } = project;
 
 <Base title={data.title} description={data.summary}>
   <article class="container project">
-    <header class="project-head">
+    <p class="back-link">
+      <a href="/projects/">← 返回项目列表</a>
+    </p>
+    <header class="project-head" data-reveal>
       <p class="eyebrow">
         <span>{data.year}</span>
         {
@@ -55,11 +58,11 @@ const { data } = project;
       }
     </header>
 
-    <div class="prose project-body">
+    <div class="prose project-body" data-reveal>
       <Content />
     </div>
 
-    <footer class="project-foot">
+    <footer class="project-foot" data-reveal>
       <a href="/projects/">← 返回项目列表</a>
     </footer>
   </article>
@@ -69,6 +72,23 @@ const { data } = project;
   .project {
     padding-block: var(--s-12) var(--s-16);
     max-width: var(--w-prose);
+  }
+
+  .back-link {
+    font-size: var(--t-sm);
+    margin-bottom: var(--s-6);
+  }
+
+  .back-link a {
+    text-decoration: none;
+    color: var(--c-muted);
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+  }
+
+  .back-link a:hover {
+    color: var(--c-seal);
+    border-bottom-color: var(--c-seal);
   }
 
   .project-head {
