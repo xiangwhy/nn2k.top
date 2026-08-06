@@ -22,13 +22,32 @@ const { data } = project;
       </ul>
     )
   }
+  {
+    data.downloads && data.downloads.length > 0 && (
+      <ul class="downloads" aria-label="下载">
+        {data.downloads.map((d) => (
+          <li>
+            <a
+              class="dl"
+              href={d.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="event.stopPropagation()"
+            >
+              {d.label} <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
   <span class="arrow" aria-hidden="true">→</span>
 </a>
 
 <style>
   .row {
     display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr) auto auto;
+    grid-template-columns: 4rem minmax(0, 1fr) auto auto auto;
     align-items: baseline;
     column-gap: var(--s-6);
     padding-block: var(--s-6);
@@ -123,12 +142,39 @@ const { data } = project;
     transition: color 0.2s ease, transform 0.2s ease;
   }
 
+  .downloads {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    gap: var(--s-2);
+    align-self: center;
+  }
+
+  .dl {
+    display: inline-block;
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    color: var(--c-muted);
+    text-decoration: none;
+    padding: 2px var(--s-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .dl:hover {
+    color: var(--c-seal);
+    border-color: var(--c-seal);
+  }
+
   @media (max-width: 700px) {
     .row {
-      grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+      grid-template-columns: 3.5rem minmax(0, 1fr) auto auto;
       grid-template-areas:
-        'year body arrow'
-        'tags tags  tags';
+        'year body   arrow  downloads'
+        'tags tags   tags   tags';
       column-gap: var(--s-4);
       row-gap: var(--s-2);
       padding-block: var(--s-6);
@@ -143,6 +189,10 @@ const { data } = project;
     .tags {
       grid-area: tags;
       align-self: start;
+    }
+    .downloads {
+      grid-area: downloads;
+      justify-self: end;
     }
     .arrow {
       grid-area: arrow;
