@@ -12,6 +12,11 @@ const sorted = all.sort(
 );
 const featured = sorted.filter((p) => p.data.featured);
 const rest = sorted.filter((p) => !p.data.featured);
+
+const allLinks = await getCollection('links', ({ data }) => !data.draft);
+const recent = allLinks
+  .sort((a, b) => b.data.taken_at.getTime() - a.data.taken_at.getTime())
+  .slice(0, 3);
 ---
 
 <Base title="nn2k.top">
@@ -66,6 +71,44 @@ const rest = sorted.filter((p) => !p.data.featured);
             <ProjectRow project={p} />
           ))}
         </div>
+      </section>
+    )
+  }
+
+  {
+    recent.length > 0 && (
+      <section class="container section" data-reveal>
+        <header class="section-head">
+          <h2 class="section-title">最近的网摘</h2>
+          <span class="section-dots" aria-hidden="true">· · ·</span>
+          <span class="section-rule" aria-hidden="true" />
+          <a href="/links/" class="section-more">全部 →</a>
+        </header>
+        <ol class="recent" role="list">
+          {recent.map((l) => (
+            <li class="recent-item">
+              <time
+                class="recent-date"
+                datetime={l.data.taken_at.toISOString()}
+              >
+                {String(l.data.taken_at.getMonth() + 1).padStart(2, '0')}.
+                {String(l.data.taken_at.getDate()).padStart(2, '0')}
+              </time>
+              <a
+                class="recent-title"
+                href={l.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {l.data.title}
+                <span class="ext" aria-hidden="true">↗</span>
+              </a>
+              {l.data.source && (
+                <span class="recent-source">{l.data.source}</span>
+              )}
+            </li>
+          ))}
+        </ol>
       </section>
     )
   }
@@ -186,6 +229,98 @@ const rest = sorted.filter((p) => !p.data.featured);
 
   .list {
     margin-top: var(--s-2);
+  }
+
+  .section-more {
+    font-family: var(--ff-mono);
+    font-size: var(--t-sm);
+    color: var(--c-muted);
+    text-decoration: none;
+    flex-shrink: 0;
+    margin-left: var(--s-4);
+    letter-spacing: 0.02em;
+  }
+
+  .section-more:hover {
+    color: var(--c-seal);
+  }
+
+  .recent {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .recent-item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: var(--s-4);
+    padding-block: var(--s-4);
+    border-top: 1px solid var(--c-rule);
+  }
+
+  .recent-item:last-child {
+    border-bottom: 1px solid var(--c-rule);
+  }
+
+  .recent-date {
+    font-family: var(--ff-mono);
+    font-size: var(--t-sm);
+    color: var(--c-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+
+  .recent-title {
+    font-family: var(--ff-display);
+    font-size: var(--t-base);
+    font-weight: 500;
+    color: var(--c-ink);
+    text-decoration: none;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  .recent-title:hover {
+    color: var(--c-seal);
+  }
+
+  .recent-title .ext {
+    font-family: var(--ff-mono);
+    font-size: 0.85em;
+    color: var(--c-muted);
+  }
+
+  .recent-title:hover .ext {
+    color: var(--c-seal);
+  }
+
+  .recent-source {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .recent-item {
+      grid-template-columns: 3rem 1fr;
+      grid-template-areas:
+        'date title'
+        'source source';
+      row-gap: var(--s-1);
+    }
+    .recent-date {
+      grid-area: date;
+    }
+    .recent-title {
+      grid-area: title;
+    }
+    .recent-source {
+      grid-area: source;
+    }
   }
 
   @keyframes hero-enter {
