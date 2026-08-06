@@ -9,10 +9,12 @@ const { project } = Astro.props;
 const { data } = project;
 ---
 
-<a href={`/projects/${project.id}/`} class="row">
+<div class="row">
   <span class="year">{data.year}</span>
   <div class="body">
-    <h3 class="title">{data.title}</h3>
+    <h3 class="title">
+      <a href={`/projects/${project.id}/`}>{data.title}</a>
+    </h3>
     <p class="summary">{data.summary}</p>
   </div>
   {
@@ -32,7 +34,6 @@ const { data } = project;
               href={d.url}
               target="_blank"
               rel="noopener noreferrer"
-              onclick="event.stopPropagation()"
             >
               {d.label} <span aria-hidden="true">↗</span>
             </a>
@@ -42,7 +43,7 @@ const { data } = project;
     )
   }
   <span class="arrow" aria-hidden="true">→</span>
-</a>
+</div>
 
 <style>
   .row {
@@ -52,7 +53,6 @@ const { data } = project;
     column-gap: var(--s-6);
     padding-block: var(--s-6);
     border-top: 1px solid var(--c-rule);
-    text-decoration: none;
     color: var(--c-ink);
   }
 
@@ -61,11 +61,8 @@ const { data } = project;
     border-bottom: 1px solid var(--c-rule);
   }
 
-  .row:hover {
-    color: var(--c-ink);
-  }
-
-  .row:hover .title {
+  /* hover targets the title link only — keeps the row from feeling like a giant hit area */
+  .row:hover .title a {
     color: var(--c-seal);
   }
 
@@ -97,7 +94,16 @@ const { data } = project;
     margin: 0;
     line-height: 1.25;
     letter-spacing: -0.005em;
+  }
+
+  .title a {
+    color: inherit;
+    text-decoration: none;
     transition: color 0.2s ease;
+  }
+
+  .title a:hover {
+    color: var(--c-seal);
   }
 
   .summary {
@@ -146,25 +152,21 @@ const { data } = project;
     list-style: none;
     margin: 0;
     padding: 0;
-    display: inline-flex;
-    gap: var(--s-3);
-    align-self: center;
     font-family: var(--ff-mono);
     font-size: var(--t-xs);
     color: var(--c-muted);
     letter-spacing: 0.05em;
+    white-space: nowrap;
   }
 
   .downloads li {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--s-1);
+    display: inline;
   }
 
   .downloads li:not(:last-child)::after {
     content: '·';
     color: var(--c-rule);
-    margin-left: var(--s-3);
+    margin: 0 var(--s-2);
   }
 
   .dl {
@@ -181,16 +183,19 @@ const { data } = project;
     border-bottom-color: var(--c-seal);
   }
 
-  .dl .ext {
-    color: inherit;
+  .dl span[aria-hidden] {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.05em;
   }
 
   @media (max-width: 700px) {
     .row {
-      grid-template-columns: 3.5rem minmax(0, 1fr) auto auto;
+      grid-template-columns: 3.5rem minmax(0, 1fr) auto;
       grid-template-areas:
-        'year body   arrow  downloads'
-        'tags tags   tags   tags';
+        'year body   arrow'
+        'tags tags   tags'
+        'downloads downloads downloads';
       column-gap: var(--s-4);
       row-gap: var(--s-2);
       padding-block: var(--s-6);
@@ -208,7 +213,7 @@ const { data } = project;
     }
     .downloads {
       grid-area: downloads;
-      justify-self: end;
+      align-self: start;
     }
     .arrow {
       grid-area: arrow;
