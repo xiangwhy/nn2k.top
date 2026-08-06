@@ -17,7 +17,7 @@ export const GET: APIRoute = async () => {
       .replace(/'/g, '&apos;');
 
   const SITE = 'https://nn2k.top';
-  const FEED_TITLE = '外面的 — nn2k.top';
+  const FEED_TITLE = '网摘 — nn2k.top';
   const FEED_DESC = '看到就放这儿 — 不是每天，但攒到值得的会推。';
 
   const items = sorted

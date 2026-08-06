@@ -17,7 +17,7 @@ const projects = defineCollection({
   }),
 });
 
-// Linkblog: 1 markdown = 1 条「我看到了就放这儿」的外链 + 1-2 句评论。
+// Linkblog (网摘): 1 markdown = 1 条外链 + 1-2 句评论。
 // 不承诺"每天"——节奏自然出来。
 const links = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/links' }),
