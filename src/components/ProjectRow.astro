@@ -147,26 +147,42 @@ const { data } = project;
     margin: 0;
     padding: 0;
     display: inline-flex;
-    gap: var(--s-2);
+    gap: var(--s-3);
     align-self: center;
-  }
-
-  .dl {
-    display: inline-block;
     font-family: var(--ff-mono);
     font-size: var(--t-xs);
     color: var(--c-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .downloads li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--s-1);
+  }
+
+  .downloads li:not(:last-child)::after {
+    content: '·';
+    color: var(--c-rule);
+    margin-left: var(--s-3);
+  }
+
+  .dl {
+    color: var(--c-muted);
     text-decoration: none;
-    padding: 2px var(--s-2);
-    border: 1px solid var(--c-rule);
-    border-radius: 2px;
-    letter-spacing: 0.04em;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease;
   }
 
   .dl:hover {
     color: var(--c-seal);
-    border-color: var(--c-seal);
+    border-bottom-color: var(--c-seal);
+  }
+
+  .dl .ext {
+    color: inherit;
   }
 
   @media (max-width: 700px) {

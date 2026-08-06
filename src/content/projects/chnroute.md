@@ -7,9 +7,9 @@ repo: "https://github.com/xiangwhy/chnroute"
 featured: false
 downloads:
   - label: "CN.rsc"
-    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/main/CN.rsc"
+    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/master/CN.rsc"
   - label: "LAN.rsc"
-    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/main/LAN.rsc"
+    url: "https://raw.githubusercontent.com/xiangwhy/chnroute/master/LAN.rsc"
 order: 80
 ---
 
