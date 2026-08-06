@@ -1,6 +1,6 @@
 ---
 title: "SinoRept"
-summary: "sinorept.com — 双语产品展示站，从 CMS 到 VPS 自管自部署。"
+summary: "sinorept.com — 爬宠双语产品展示站，从 CMS 到 VPS 自管自部署。"
 year: 2026
 tags: ["Next.js", "Payload CMS", "Tailwind", "Self-hosted", "i18n"]
 link: "https://sinorept.com"
