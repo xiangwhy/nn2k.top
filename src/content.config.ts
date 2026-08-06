@@ -17,4 +17,18 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+// Linkblog: 1 markdown = 1 条「我看到了就放这儿」的外链 + 1-2 句评论。
+// 不承诺"每天"——节奏自然出来。
+const links = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/links' }),
+  schema: z.object({
+    title: z.string(),
+    url: z.string().url(),
+    source: z.string().optional(),
+    taken_at: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, links };

@@ -121,22 +121,27 @@ gh repo create nn2k.top --public --source=. --remote=origin --push
 ```
 src/
 ├── content.config.ts      # 内容集合 schema
-├── content/projects/      # 项目 markdown（占位 → 真实项目）
+├── content/projects/      # 项目 markdown
+├── content/links/         # 文章流（linkblog）markdown
 ├── layouts/Base.astro     # 基础 HTML 壳
-├── components/            # Header / Footer / ProjectCard / Seal
+├── components/            # Header / Footer / ProjectCard / ProjectRow / Seal
 ├── pages/
 │   ├── index.astro        # 首页：hero + 重点项目 + 其他列表
-│   ├── about.astro        # 关于页（待写）
-│   └── projects/
-│       ├── index.astro    # 项目全列表
-│       └── [...slug].astro# 项目详情（动态路由）
+│   ├── about.astro        # 关于页
+│   ├── 404.astro
+│   ├── projects/
+│   │   ├── index.astro    # 项目全列表
+│   │   └── [...slug].astro# 项目详情（动态路由）
+│   └── links/
+│       ├── index.astro    # 文章流：按月分组
+│       └── rss.xml.ts     # RSS 2.0 端点
 └── styles/global.css      # 设计 token + 基础排版
 
 根目录：
 ├── astro.config.mjs       # CF adapter + sitemap + mdx 集成
 ├── pnpm-workspace.yaml    # pnpm 11 allowBuilds（pnpm 10 兼容用 packages: []）
 ├── .npmrc                 # pnpm 10 兜底的 only-built-dependencies
-└── public/                # favicon 等静态资源
+└── public/                # favicon / og-image / robots 等静态资源
 ```
 
 ## 设计方向（备忘）
@@ -149,6 +154,8 @@ src/
 
 ## 待办
 
-- [ ] 替换 `src/content/projects/placeholder-*.md` 为真实项目
-- [ ] 写 `src/pages/about.astro` 正文
+- [x] 替换 `src/content/projects/placeholder-*.md` 为真实项目（`6af2144`）
+- [x] 写 `src/pages/about.astro` 正文（`6af2144`）
+- [x] `/links/` 文章流 + RSS（commit 待）
+- [ ] 3 个项目 markdown 的项目背景段 TODO 填具体动机
 - [ ] （可选）评论 / 分析：Giscus + Plausible / Umami 都免费，按需接入

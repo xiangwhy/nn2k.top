@@ -1,0 +1,290 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const all = await getCollection('links', ({ data }) => !data.draft);
+const sorted = all.sort(
+  (a, b) => b.data.taken_at.getTime() - a.data.taken_at.getTime(),
+);
+
+// Group by year-month for display: "2026 年 8 月"
+const groups = new Map<string, typeof sorted>();
+for (const link of sorted) {
+  const d = link.data.taken_at;
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key)!.push(link);
+}
+
+function formatGroup(key: string): string {
+  const [y, m] = key.split('-').map(Number);
+  return `${y} 年 ${m} 月`;
+}
+
+const monthKeys = [...groups.keys()].sort((a, b) => (a < b ? 1 : -1));
+---
+
+<Base
+  title="外面的"
+  description="看到就放这儿 — 不是每天，但攒到值得的会推。"
+>
+  <section class="container list-page" data-reveal>
+    <header class="list-head">
+      <p class="eyebrow">
+        {
+          sorted.length === 0
+            ? '还没有条目'
+            : `累计 · ${sorted.length} 条`
+        }
+        <span class="rss-hint">
+          · <a href="/links/rss.xml">RSS</a>
+        </span>
+      </p>
+      <h1 class="list-title">外面的</h1>
+      <p class="list-blurb">
+        看到就放这儿 — 不是每天，但攒到值得的会推。<br />
+        每条带 1-2 句为什么留着。在 <code>src/content/links/</code> 加 markdown。
+      </p>
+    </header>
+
+    {
+      sorted.length === 0 ? (
+        <div class="empty">
+          <p>第一条还没来。</p>
+          <pre><code>---
+title: "示例：用 1-2 句写为什么留这条"
+url: "https://example.com/your-first-link"
+taken_at: 2026-08-06
+tags: ["示例"]
+---
+
+这是占位。删掉它，从你的第一条开始。</code></pre>
+        </div>
+      ) : (
+        <div class="month-stack">
+          {monthKeys.map((key) => (
+            <section class="month">
+              <h2 class="month-label">{formatGroup(key)}</h2>
+              <ol class="entries" role="list">
+                {groups.get(key)!.map(async (link) => {
+                  const { Content } = await render(link);
+                  return (
+                    <li class="entry">
+                      <a
+                        class="entry-title"
+                        href={link.data.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.data.title} <span class="ext" aria-hidden="true">↗</span>
+                      </a>
+                      <p class="entry-meta">
+                        <time datetime={link.data.taken_at.toISOString()}>
+                          {String(link.data.taken_at.getDate()).padStart(2, '0')}
+                        </time>
+                        {link.data.source && (
+                          <>
+                            <span class="dot" aria-hidden="true">·</span>
+                            <span class="source">{link.data.source}</span>
+                          </>
+                        )}
+                        {link.data.tags.length > 0 && (
+                          <span class="tags">
+                            {link.data.tags.map((t) => (
+                              <span class="tag">{t}</span>
+                            ))}
+                          </span>
+                        )}
+                      </p>
+                      <div class="entry-body">
+                        <Content />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .list-page {
+    padding-block: var(--s-12) var(--s-16);
+  }
+
+  .list-head {
+    margin-bottom: var(--s-12);
+  }
+
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--c-muted);
+    margin-bottom: var(--s-3);
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+  }
+
+  .rss-hint {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .rss-hint a {
+    color: var(--c-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-rule);
+    padding-bottom: 1px;
+  }
+
+  .rss-hint a:hover {
+    color: var(--c-seal);
+    border-bottom-color: var(--c-seal);
+  }
+
+  .list-title {
+    font-size: clamp(var(--t-3xl), 6vw, var(--t-4xl));
+    margin-bottom: var(--s-4);
+  }
+
+  .list-blurb {
+    color: var(--c-muted);
+    font-size: var(--t-base);
+    line-height: 1.7;
+    max-width: 36rem;
+  }
+
+  .list-blurb code {
+    background: var(--c-card);
+    padding: 0 0.35em;
+    border-radius: 2px;
+    font-size: 0.9em;
+  }
+
+  .empty {
+    margin-top: var(--s-8);
+    padding: var(--s-8);
+    background: var(--c-card);
+    border: 1px solid var(--c-rule);
+  }
+
+  .empty p {
+    color: var(--c-muted);
+    margin-bottom: var(--s-4);
+  }
+
+  .empty pre {
+    margin: 0;
+    font-family: var(--ff-mono);
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--c-ink);
+    white-space: pre-wrap;
+  }
+
+  .month-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-12);
+  }
+
+  .month-label {
+    font-family: var(--ff-mono);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--s-4);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--c-rule);
+  }
+
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+  }
+
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .entry-title {
+    font-family: var(--ff-display);
+    font-size: var(--t-lg);
+    font-weight: 500;
+    color: var(--c-ink);
+    text-decoration: none;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  .entry-title:hover {
+    color: var(--c-seal);
+  }
+
+  .ext {
+    font-family: var(--ff-mono);
+    font-size: 0.85em;
+    color: var(--c-muted);
+  }
+
+  .entry-title:hover .ext {
+    color: var(--c-seal);
+  }
+
+  .entry-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--ff-mono);
+    font-size: var(--t-xs);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  .entry-meta time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dot {
+    color: var(--c-rule);
+  }
+
+  .tags {
+    display: inline-flex;
+    gap: var(--s-2);
+  }
+
+  .entry-body {
+    color: var(--c-ink);
+    font-size: var(--t-base);
+    line-height: 1.7;
+    max-width: 36rem;
+  }
+
+  .entry-body :global(p) {
+    margin: 0;
+  }
+
+  .entry-body :global(p + p) {
+    margin-top: var(--s-2);
+  }
+</style>
