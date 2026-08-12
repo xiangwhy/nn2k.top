@@ -17,9 +17,7 @@ order: 80
 
 ## 项目背景
 
-自从有了 AI，把很多以前没办法实现的想法慢慢做出来了 — chnroute fork 属于另一类：把日常里的小琐碎自动化。
-
-<!-- TODO：1-2 句 fork 的具体动机 — 比如「上游停更」「RouterOS v7 上游没适配」「macOS 上跑不动」。 -->
+自从有了 AI，把很多以前没办法实现的想法慢慢做出来了 — chnroute fork 属于另一类：上游 ruijzhan/chnroute 停更了，自己日常还在用，只好 fork 出来自己维护，把 macOS 兼容、时区、RouterOS v7 这些卡脖子的点一个个补上。
 
 ## 我做了什么
 
