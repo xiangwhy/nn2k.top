@@ -96,18 +96,10 @@ const { data } = project;
   }
 
   .arrow {
-    position: absolute;
-    top: var(--s-6);
-    right: var(--s-6);
     color: var(--c-muted);
     transition: color 0.2s ease, transform 0.2s ease;
     font-size: var(--t-base);
-  }
-
-  @media (max-width: 600px) {
-    .arrow {
-      position: static;
-      align-self: flex-end;
-    }
+    align-self: end;
+    margin-top: auto;
   }
 </style>
