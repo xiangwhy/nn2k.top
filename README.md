@@ -13,7 +13,7 @@ pnpm build          # 产物输出到 ./dist
 pnpm preview        # 本地预览构建产物
 ```
 
-需要 Node ≥ 22.12。
+需要 Node ≥ 22.23.4（astro 7.4 / mdx 8 起的要求）。
 
 ### pnpm 11 注意（本地）
 
@@ -107,6 +107,8 @@ gh repo create nn2k.top --public --source=. --remote=origin --push
 | `PNPM_ENABLE`   | `true` |
 
 不设 `PNPM_ENABLE=true` 的话 CF Pages 会走默认 npm 构建，`pnpm-workspace.yaml` 路径会触发 pnpm 10 的兼容报错。
+
+`NODE_VERSION=22` 解析成 CF 镜像里最新的 22.x，满足 astro 7.4+ 要求的 ≥ 22.23.4；若 CF 镜像滞后导致构建报 engine 错，把这里改成具体版本（如 `22.23.4`）。
 
 **5. 绑定自定义域**
 - Workers & Pages → `nn2k-top` worker → Settings → Triggers → Custom Domains → Add Custom Domain
