@@ -131,15 +131,6 @@ const { data } = project;
     flex-wrap: wrap;
   }
 
-  .tags {
-    display: inline-flex;
-    gap: var(--s-2);
-  }
-
-  .tag {
-    display: inline-block;
-  }
-
   .sep {
     color: var(--c-rule);
   }
@@ -171,8 +162,8 @@ const { data } = project;
   }
 
   .project-downloads {
-    margin: 0 0 var(--s-10);
-    padding: var(--s-5) var(--s-6);
+    margin: 0 0 var(--s-6);
+    padding: var(--s-4) var(--s-6);
     background: var(--c-card);
     border: 1px solid var(--c-rule);
     border-radius: 2px;
@@ -226,6 +217,7 @@ const { data } = project;
   }
 
   .downloads-ext {
+    font-family: var(--ff-mono);
     font-size: 0.85em;
     color: var(--c-muted);
   }
@@ -249,9 +241,18 @@ const { data } = project;
   }
 
   .project-body :global(h3) {
+    /* inline-block so the rule hugs the heading text instead of spanning
+     * the column — the same hairline language as the h2 top rule */
+    display: inline-block;
     font-size: var(--t-lg);
     margin-top: var(--s-8);
     margin-bottom: var(--s-3);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--c-rule);
+  }
+
+  .project-body :global(h3:first-child) {
+    margin-top: 0;
   }
 
   .project-body :global(p),
@@ -262,21 +263,22 @@ const { data } = project;
     line-height: 1.75;
   }
 
-  .project-body :global(ul),
-  .project-body :global(ol) {
-    padding-left: var(--s-6);
-  }
-
-  .project-body :global(li) {
-    margin-bottom: var(--s-2);
-  }
-
+  /* The opening hook of every article — the one line that should read
+   * loudest. No italic: the CJK body font has no true italic, browsers
+   * fake a slant that looks broken. */
   .project-body :global(blockquote) {
+    margin: 0 0 var(--s-8);
+    padding: var(--s-4) var(--s-6);
     border-left: 2px solid var(--c-seal);
-    padding-left: var(--s-4);
-    color: var(--c-muted);
-    font-style: italic;
-    margin-block: var(--s-4);
+    background: var(--c-card);
+    color: var(--c-ink);
+    font-style: normal;
+    line-height: 1.7;
+  }
+
+  .project-body :global(blockquote p) {
+    margin: 0;
+    font-size: var(--t-lg);
   }
 
   .project-body :global(hr) {

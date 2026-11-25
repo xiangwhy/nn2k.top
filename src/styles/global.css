@@ -47,16 +47,6 @@
   --w-wide: 56rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --c-paper: #14130f;
-    --c-ink: #ece7d8;
-    --c-seal: #d9534c;
-    --c-muted: #8d8779;
-    --c-rule: #2e2b25;
-    --c-card: #1c1a15;
-  }
-}
 
 /* ---------------------------------------------------------------------------
  * Base
@@ -123,10 +113,28 @@ p {
   margin: 0 0 var(--s-4);
 }
 
-code,
+code {
+  font-family: var(--ff-mono);
+  font-size: 0.9em;
+}
+
 pre {
   font-family: var(--ff-mono);
   font-size: 0.9em;
+  margin: 0 0 var(--s-4);
+}
+
+/* Shiki emits <pre><code>, so the code text would land at 0.81em inside a
+ * 0.9em box without this. */
+pre code {
+  font-size: 1em;
+}
+
+/* Inline code only — fenced blocks get the .astro-code treatment below. */
+:not(pre) > code {
+  background: var(--c-card);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
 }
 
 img {
@@ -158,6 +166,79 @@ hr {
 
 .prose {
   max-width: var(--w-prose);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--s-6);
+}
+
+.prose li {
+  margin-bottom: var(--s-2);
+}
+
+/* ---------------------------------------------------------------------------
+ * Tables — hairline rows, mono column heads. The site has no table styling
+ * anywhere else, so this is the single definition.
+ * ------------------------------------------------------------------------- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-sm);
+}
+
+.prose th {
+  text-align: left;
+  font-family: var(--ff-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  padding: 0 var(--s-4) var(--s-2) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.prose td {
+  padding: var(--s-2) var(--s-4) var(--s-2) 0;
+  border-bottom: 1px solid var(--c-rule);
+  vertical-align: top;
+}
+
+/* ---------------------------------------------------------------------------
+ * Tag chips — one treatment for cards, rows, article eyebrows and linkblog.
+ * flex-wrap matters: without it a long tag list overflows the viewport.
+ * ------------------------------------------------------------------------- */
+.tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  font-family: var(--ff-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---------------------------------------------------------------------------
+ * Code blocks — Shiki (github-light, see astro.config.mjs) writes the
+ * colours inline; this only dresses the box. The hairline border is what
+ * makes it read as a deliberate slip rather than a stray white rectangle.
+ * ------------------------------------------------------------------------- */
+.astro-code {
+  padding: var(--s-4);
+  border: 1px solid var(--c-rule);
+  border-radius: 2px;
+  line-height: 1.6;
+  overflow-x: auto;
 }
 
 /* ---------------------------------------------------------------------------

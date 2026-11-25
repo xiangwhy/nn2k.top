@@ -12,50 +12,57 @@ interface Props {
   char?: string;
   /** Pixel size. */
   size?: number;
+  /** Decorative marks: hidden from assistive tech instead of announced. */
+  decorative?: boolean;
 }
 
-const { char = '翔', size = 96 } = Astro.props;
+const { char = '翔', size = 96, decorative = false } = Astro.props;
 ---
 
 <span
   class="seal"
-  role="img"
-  aria-label={`印章 · ${char}`}
-  style={`--seal-size: ${size}px`}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : `印章 · ${char}`}
+  aria-hidden={decorative ? 'true' : undefined}
+  style={`--seal-size-prop: ${size}px`}
 >
   <span class="seal-char">{char}</span>
 </span>
 
 <style>
   .seal {
+    /* --seal-size-override lets a parent resize the seal from CSS;
+     * --seal-size-prop carries the size prop. */
+    --seal-size: var(--seal-size-override, var(--seal-size-prop, 96px));
     display: inline-grid;
     place-items: center;
-    width: var(--seal-size, 96px);
-    height: var(--seal-size, 96px);
+    width: var(--seal-size);
+    height: var(--seal-size);
     background: var(--c-seal);
     color: var(--c-paper);
     transform: rotate(-4deg);
     box-shadow:
-      inset 0 0 0 calc(var(--seal-size, 96px) * 0.025)
+      inset 0 0 0 calc(var(--seal-size) * 0.025)
         rgba(241, 238, 231, 0.15),
-      0 calc(var(--seal-size, 96px) * 0.012) 0
+      0 calc(var(--seal-size) * 0.012) 0
         rgba(26, 24, 20, 0.08);
     position: relative;
   }
 
-  /* Hand-pressed distress: a thin outer ring; sized with the seal itself. */
+  /* Hand-pressed distress: a thin outer ring; sized with the seal itself.
+   * Follows --c-seal so it tracks the dark-mode seal colour. */
   .seal::before {
     content: '';
     position: absolute;
-    inset: calc(var(--seal-size, 96px) * -0.035);
-    border: 1px solid rgba(181, 48, 42, 0.35);
+    inset: calc(var(--seal-size) * -0.035);
+    border: 1px solid color-mix(in srgb, var(--c-seal) 35%, transparent);
     pointer-events: none;
   }
 
   .seal-char {
     font-family: var(--ff-display);
     font-weight: 500;
-    font-size: calc(var(--seal-size, 96px) * 0.55);
+    font-size: calc(var(--seal-size) * 0.55);
     line-height: 1;
     /* optical centering for the single glyph */
     padding-bottom: 6%;

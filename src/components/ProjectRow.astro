@@ -17,38 +17,42 @@ const { data } = project;
     </h3>
     <p class="summary">{data.summary}</p>
   </div>
-  {
-    data.tags.length > 0 && (
-      <ul class="tags" aria-label="标签">
-        {data.tags.map((t) => <li class="tag">{t}</li>)}
-      </ul>
-    )
-  }
-  {
-    data.downloads && data.downloads.length > 0 && (
-      <ul class="downloads" aria-label="下载">
-        {data.downloads.map((d) => (
-          <li>
-            <a
-              class="dl"
-              href={d.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {d.label} <span aria-hidden="true">↗</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <div class="meta">
+    {
+      data.tags.length > 0 && (
+        <ul class="tags" aria-label="标签">
+          {data.tags.map((t) => <li class="tag">{t}</li>)}
+        </ul>
+      )
+    }
+    {
+      data.downloads && data.downloads.length > 0 && (
+        <ul class="downloads" aria-label="下载">
+          {data.downloads.map((d) => (
+            <li>
+              <a
+                class="dl"
+                href={d.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {d.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
   <span class="arrow" aria-hidden="true">→</span>
 </div>
 
 <style>
   .row {
     display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr) auto auto auto;
+    /* Fixed meta column: tags + downloads share it, so the body column keeps
+     * the same width on every row and the arrows line up. */
+    grid-template-columns: 4rem minmax(0, 1fr) 14rem 1.5rem;
     align-items: baseline;
     column-gap: var(--s-6);
     padding-block: var(--s-6);
@@ -119,26 +123,11 @@ const { data } = project;
     overflow: hidden;
   }
 
-  .tags {
-    display: inline-flex;
-    flex-wrap: wrap;
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--s-2);
-    font-family: var(--ff-mono);
-    font-size: var(--t-xs);
-    color: var(--c-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    align-self: center;
-    max-width: 14rem;
-  }
-
-  .tag:not(:last-child)::after {
-    content: '·';
-    margin-left: var(--s-2);
-    color: var(--c-rule);
   }
 
   .arrow {
@@ -184,18 +173,24 @@ const { data } = project;
   }
 
   .dl span[aria-hidden] {
+    font-size: 0.85em;
+    color: var(--c-muted);
     vertical-align: baseline;
     position: relative;
     top: -0.05em;
+    transition: color 0.2s ease;
+  }
+
+  .dl:hover span[aria-hidden] {
+    color: var(--c-seal);
   }
 
   @media (max-width: 700px) {
     .row {
       grid-template-columns: 3.5rem minmax(0, 1fr) auto;
       grid-template-areas:
-        'year body   arrow'
-        'tags tags   tags'
-        'downloads downloads downloads';
+        'year body arrow'
+        'meta meta meta';
       column-gap: var(--s-4);
       row-gap: var(--s-2);
       padding-block: var(--s-6);
@@ -207,13 +202,8 @@ const { data } = project;
     .body {
       grid-area: body;
     }
-    .tags {
-      grid-area: tags;
-      align-self: start;
-    }
-    .downloads {
-      grid-area: downloads;
-      align-self: start;
+    .meta {
+      grid-area: meta;
     }
     .arrow {
       grid-area: arrow;

@@ -12,4 +12,11 @@ export default defineConfig({
     platformProxy: { enabled: true },
   }),
   integrations: [sitemap(), mdx()],
+  // Code blocks: one light theme, matching the paper palette. The site's
+  // token set is light-mode only.
+  markdown: {
+    shikiConfig: {
+      theme: 'github-light',
+    },
+  },
 });
